@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة مواقيت الصلاة</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      background: #0b2c3d;
+      font-family: Tahoma, Arial, sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    .header {
+      background: #114e60;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .clock {
+      font-size: 50px;
+      margin: 20px 0;
+      color: #ffd700;
+    }
+
+    .board {
+      width: 90%;
+      margin: auto;
+      font-size: 26px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    الجمعية الخيرية
+  </div>
+
+  <div class="clock" id="clock">--:--:--</div>
+
+  <div class="board">
+    <div class="row"><span>الفجر</span><span id="fajr">--:--</span></div>
+    <div class="row"><span>الظهر</span><span id="dhuhr">--:--</span></div>
+    <div class="row"><span>العصر</span><span id="asr">--:--</span></div>
+    <div class="row"><span>المغرب</span><span id="maghrib">--:--</span></div>
+    <div class="row"><span>العشاء</span><span id="isha">--:--</span></div>
+    <div class="row"><span>الجمعة</span><span>13:00</span></div>
+  </div>
+
+<script>
+/* الساعة */
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clock").innerText =
+    now.toLocaleTimeString("ar-DZ");
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* مواقيت مسجد سلمان الفارسي (مرجع MAWAQIT) */
+fetch("https://mawaqit.net/api/2/mosque/salman-farisi-guerrem-gougoua")
+  .then(response => response.json())
+  .then(data => {
+    const p = data.prayers;
+    document.getElementById("fajr").innerText = p.fajr;
+    document.getElementById("dhuhr").innerText = p.dhuhr;
+    document.getElementById("asr").innerText = p.asr;
+    document.getElementById("maghrib").innerText = p.maghrib;
+    document.getElementById("isha").innerText = p.isha;
+  })
+  .catch(() => {
+    console.log("خطأ في تحميل المواقيت");
+  });
+</script>
+
+</body>
+</html>
